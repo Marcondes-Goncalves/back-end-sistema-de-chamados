@@ -30,19 +30,17 @@ public class ChamadoService {
 
     // o usuário pode cancelar o chamado, mas apenas se ele estiver em aberto ou em andamento
     public String cancelarChamado(Long id) {
+        
         Chamado chamado = chamadoRepository.findById(id)
                 .orElseThrow(() -> new ExceptionMsg("Chamado não encontrado com o ID: " + id));
 
-        if (chamado.getStatus() == StatusChamado.CANCELADO) {
-            throw new ExceptionMsg("O chamado já está cancelado.");
-        }else if (chamado.getStatus() == StatusChamado.FECHADO) {
-            throw new ExceptionMsg("O chamado já está fechado e não pode ser cancelado.");
-        } else if (chamado.getStatus() == StatusChamado.RESOLVIDO) {
-            throw new ExceptionMsg("O chamado já está resolvido e não pode ser cancelado.");
+        if (chamado.getStatus() == StatusChamado.ABERTO || chamado.getStatus() == StatusChamado.ANDAMENTO) {
+            
+            chamado.setStatus(StatusChamado.CANCELADO);
+            chamadoRepository.save(chamado);
+        }else {
+            throw new ExceptionMsg("O chamado não pode ser cancelado porque já foi: " + chamado.getStatus());
         }
-
-        chamado.setStatus(StatusChamado.CANCELADO);
-        chamadoRepository.save(chamado);
 
         return "Chamado cancelado com sucesso.";
     }
@@ -65,6 +63,7 @@ public class ChamadoService {
 
     // o técnico pode resolver o chamado, mas apenas se ele estiver em andamento
     public Chamado chamadoResolvido(Chamado chamado) {
+        
         if (chamado.getStatus() != StatusChamado.ANDAMENTO) {
             throw new ExceptionMsg("O chamado não está em andamento e não pode ser resolvido.");
         }
@@ -74,7 +73,8 @@ public class ChamadoService {
     }
 
     // o cliente pode fechar o chamado, mas apenas se ele estiver resolvido
-    public String chamadoFechado(Chamado chamado) {
+    public String chamadoFechado(Chamado chamado) { 
+        
         if (chamado.getStatus() != StatusChamado.RESOLVIDO) {
             throw new ExceptionMsg("O chamado não está resolvido e não pode ser fechado.");
         }
