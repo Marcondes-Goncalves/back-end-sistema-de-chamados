@@ -36,11 +36,11 @@ public class Chamado {
     @Enumerated(EnumType.STRING)
     private PrioridadeChamado prioridade;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @NotNull(message = "O cliente do chamado é obrigatório.")
     private Usuario cliente;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Usuario tecnico;
 
     @NotNull(message = "A data de abertura do chamado é obrigatória.")

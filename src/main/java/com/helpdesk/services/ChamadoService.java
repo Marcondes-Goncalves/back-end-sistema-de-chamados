@@ -27,6 +27,10 @@ public class ChamadoService {
     // o cliente pode criar um chamado, mas ele sempre será criado com status "ABERTO"
     public Chamado criarChamado(Chamado chamado) {
         chamado.setStatus(StatusChamado.ABERTO);
+        
+        Usuario usuario = usuarioRepository.findById(chamado.getCliente().getId())
+                .orElseThrow(() -> new ExceptionMsg("Cliente não encontrado com o ID: " + chamado.getCliente().getId()));
+        chamado.setCliente(usuario);
         return chamadoRepository.save(chamado);
     }
     
