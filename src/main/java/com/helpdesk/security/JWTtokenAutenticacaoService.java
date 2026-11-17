@@ -59,7 +59,7 @@ public class JWTtokenAutenticacaoService {
 
      // Implementação do método para obter a autenticação a partir do token JWT
     // Este método deve validar o token e retornar um objeto Authentication correspondente
-    public Authentication getAutenticacao(HttpServletRequest request, HttpServletResponse response) throws IOException, ExpiredJwtException, SignatureException {
+    public Authentication getAutenticacao(HttpServletRequest request, HttpServletResponse response) throws ExpiredJwtException, SignatureException {
         
         // Obtém o token JWT do cabeçalho da requisição HTTP
         String token = request.getHeader(HEADER_STRING);
@@ -77,7 +77,7 @@ public class JWTtokenAutenticacaoService {
 
             if (user != null) {
 
-                Usuario usuario = (Usuario) ApplicationContextLoad.getApplicationContext()
+                Usuario usuario = ApplicationContextLoad.getApplicationContext()
                                                         .getBean(UsuarioRepository.class)
                                                         .buscarPorLogin(user); // Obtém o usuário correspondente ao nome de usuário do token JWT
 

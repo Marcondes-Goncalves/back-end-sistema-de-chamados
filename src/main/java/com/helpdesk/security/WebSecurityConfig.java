@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +29,7 @@ public class WebSecurityConfig {
     //PRODUÇÃO PEGA DAS VARIÁVEIS DE AMBIENTE, DESENVOLVIMENTO ASSUME O VALOR PADRÃO
     // Lê a origem configurada no application.properties, caso não exista, assume localhost:4200
     @Value("${CORS_ALLOWED_ORIGINS:http://localhost:4200}")
-    private String allowedOrigins;
+    private List<String> allowedOrigins;
 
     private final JWTtokenAutenticacaoService jwtTokenService;
     private final HandlerExceptionResolver exceptionResolver;
@@ -40,23 +41,26 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
-              // Para JWT base APIs, desativamos o CSRF 
-              .csrf(csrf -> csrf.disable())
+                // Para JWT base APIs, desativamos o CSRF 
+                .csrf(AbstractHttpConfigurer::disable)
               
-              // CORS configurado abaixo
-              .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CORS configurado abaixo
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
               
-              // Define o comportamento da api como Stateless, proibindo o Spring de gerar sessões na bateria
-              .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Define o comportamento da api como Stateless, proibindo o Spring de gerar sessões na bateria
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               
-              .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/", "/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/usuarios/criar-conta").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/acessos").permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
-                    .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.POST, "/usuarios/criar-conta").permitAll()
+                .requestMatchers(HttpMethod.GET, "/chamados/abertos").hasAnyRole("ADMIN", "TECNICO")
+                .requestMatchers(HttpMethod.GET, "/chamados/em-andamento").hasAnyRole("ADMIN", "TECNICO")
+                .requestMatchers(HttpMethod.GET, "/chamados/resolvidos").hasAnyRole("ADMIN", "TECNICO")
+                .requestMatchers(HttpMethod.GET, "/chamados/fechar").hasAnyRole("ADMIN", "CLIENTE")
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                .anyRequest().authenticated()
               )
               
               // Filtros de JWT sendo injetados
@@ -70,7 +74,7 @@ public class WebSecurityConfig {
         
         CorsConfiguration configuration = new CorsConfiguration();
         // Usando a variável configurável
-        configuration.setAllowedOrigins(List.of(allowedOrigins));
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -81,7 +85,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

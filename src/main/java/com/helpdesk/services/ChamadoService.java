@@ -30,7 +30,7 @@ public class ChamadoService {
         return chamadoRepository.save(chamado);
     }
     
-    public Page<Chamado> ChamadosAbertos(Pageable pageable) {
+    public Page<Chamado> chamadosAbertos(Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.ABERTO,
@@ -46,7 +46,7 @@ public class ChamadoService {
         return chamados;
     }
     
-    public Page<Chamado> ChamadosAbertosUsuario(Long usuarioId, Pageable pageable) {
+    public Page<Chamado> chamadosAbertosUsuario(Long usuarioId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.ABERTO,
@@ -79,7 +79,7 @@ public class ChamadoService {
         return "Chamado cancelado com sucesso.";
     }
     
-    public Page<Chamado> ChamadosCanceladosUsuario(Long usuarioId, Pageable pageable) {
+    public Page<Chamado> chamadosCanceladosUsuario(Long usuarioId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.CANCELADO,
@@ -111,7 +111,7 @@ public class ChamadoService {
         return chamadoRepository.save(chamado);
     }
     
-    public Page<Chamado> ChamadosEmAndamentoUsuario(Long usuarioId, Pageable pageable) {
+    public Page<Chamado> chamadosEmAndamentoUsuario(Long usuarioId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.ANDAMENTO,
@@ -127,7 +127,7 @@ public class ChamadoService {
         return chamados;
     }
     
-    public Page<Chamado> ChamadosEmAndamentoTecnico(Long tecnicoId, Pageable pageable) {
+    public Page<Chamado> chamadosEmAndamentoTecnico(Long tecnicoId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.ANDAMENTO,
@@ -154,7 +154,7 @@ public class ChamadoService {
         return chamadoRepository.save(chamado);
     }
     
-    public Page<Chamado> ChamadosResolvidosUsuario(Long usuarioId, Pageable pageable) {
+    public Page<Chamado> chamadosResolvidosUsuario(Long usuarioId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.RESOLVIDO,
@@ -170,7 +170,7 @@ public class ChamadoService {
         return chamados;
     }
     
-    public Page<Chamado> ChamadosResolvidosTecnico(Long tecnicoId, Pageable pageable) {
+    public Page<Chamado> chamadosResolvidosTecnico(Long tecnicoId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.RESOLVIDO,
@@ -200,7 +200,7 @@ public class ChamadoService {
         return "Chamado fechado com sucesso.";
     }
     
-    public Page<Chamado> ChamadosFechadosUsuario(Long usuarioId, Pageable pageable) {
+    public Page<Chamado> chamadosFechadosUsuario(Long usuarioId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.FECHADO,
@@ -216,7 +216,7 @@ public class ChamadoService {
         return chamados;
     }
     
-    public Page<Chamado> ChamadosFechadosTecnico(Long tecnicoId, Pageable pageable) {
+    public Page<Chamado> chamadosFechadosTecnico(Long tecnicoId, Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
             StatusChamado.FECHADO,
