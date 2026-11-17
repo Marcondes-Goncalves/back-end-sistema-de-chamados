@@ -25,6 +25,6 @@ public class AcessoController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> criarAcesso(@RequestBody Acesso acesso) {
-        return new ResponseEntity<String>(acessoService.criarAcesso(acesso), HttpStatus.CREATED);
+        return new ResponseEntity<>(acessoService.criarAcesso(acesso), HttpStatus.CREATED);
     }
 }

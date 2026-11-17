@@ -28,6 +28,6 @@ public class UsuarioController {
     @PostMapping(value = "/criar-conta", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UsuarioDTO> criarConta(@Valid @RequestBody Usuario usuario) {
         UsuarioDTO usuarioCriado = usuarioService.criarConta(usuario);
-        return new ResponseEntity<UsuarioDTO>(usuarioCriado, HttpStatus.CREATED);
+        return new ResponseEntity<>(usuarioCriado, HttpStatus.CREATED);
     }
 }

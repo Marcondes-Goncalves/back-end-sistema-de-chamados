@@ -19,7 +19,7 @@ public class ImplementacaoUserDatailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         
         Usuario usuario = usuarioRepository.buscarPorLogin(username);
         

@@ -19,19 +19,21 @@ import java.util.List;
 @Setter 
 @NoArgsConstructor 
 @Entity 
-@SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1, initialValue = 1)
+@SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1)
 public class Usuario implements UserDetails {
     
     @Id 
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
     private long id;
 
-    @NotNull 
+    @NotNull(message = "O nome do usuário não pode ser nulo")
     private String nome;
 
+    @NotNull(message = "O email do usuário não pode ser nulo")
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotNull(message = "A senha do usuário não pode ser nula")
     @Column(nullable = false)
     private String senha;
 
@@ -48,10 +50,10 @@ public class Usuario implements UserDetails {
     @JoinTable(
         name = "usuario_acessos", 
         uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "acesso_id"}, name = "unique_usuario_acessos"),
-        joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id", table = "usuario", foreignKey = @ForeignKey(name = "fk_usuario", value = ConstraintMode.CONSTRAINT), unique = false),
-        inverseJoinColumns = @JoinColumn(name = "acesso_id", referencedColumnName = "id", table = "acessos", foreignKey = @ForeignKey(name = "fk_acesso", value = ConstraintMode.CONSTRAINT), unique = false)
+        joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id", table = "usuario", foreignKey = @ForeignKey(name = "fk_usuario", value = ConstraintMode.CONSTRAINT)),
+        inverseJoinColumns = @JoinColumn(name = "acesso_id", referencedColumnName = "id", table = "acessos", foreignKey = @ForeignKey(name = "fk_acesso", value = ConstraintMode.CONSTRAINT))
     )
-    private List<Acesso> acessos = new ArrayList<Acesso>();
+    private List<Acesso> acessos = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

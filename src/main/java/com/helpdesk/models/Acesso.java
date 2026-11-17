@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity 
-@SequenceGenerator(name = "acesso_seq", sequenceName = "acesso_seq", allocationSize = 1, initialValue = 1)
+@SequenceGenerator(name = "acesso_seq", sequenceName = "acesso_seq", allocationSize = 1)
 public class Acesso implements GrantedAuthority {
     
     @Id 

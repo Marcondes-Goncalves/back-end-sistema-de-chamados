@@ -39,7 +39,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioDTO criarConta(Usuario usuario) {
 
-        Usuario usuarioExistente = (Usuario) usuarioRepository.buscarPorLogin(usuario.getUsername());
+        Usuario usuarioExistente = usuarioRepository.buscarPorLogin(usuario.getUsername());
 
         if (usuarioExistente != null) {
             throw new ExceptionMsg("Já existe um usuário com o login: " + usuario.getUsername());
@@ -54,8 +54,10 @@ public class UsuarioService {
 
         this.inserirAcessoPadrao(usuarioCriado.getId());
 
-        UsuarioDTO registerDTO = new UsuarioDTO(usuarioCriado.getId(), usuarioCriado.getNome(), usuarioCriado.getEmail(), usuarioCriado.getAtivo(), usuarioCriado.getCriadoEm());
-
-        return registerDTO;
+        return new UsuarioDTO(usuarioCriado.getId(), 
+                              usuarioCriado.getNome(), 
+                              usuarioCriado.getEmail(), 
+                              usuarioCriado.getAtivo(), 
+                              usuarioCriado.getCriadoEm());
     }
 }

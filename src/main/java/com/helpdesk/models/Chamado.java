@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor 
 @Entity 
-@SequenceGenerator(name = "chamado_seq", sequenceName = "chamado_seq", allocationSize = 1, initialValue = 1)
+@SequenceGenerator(name = "chamado_seq", sequenceName = "chamado_seq", allocationSize = 1)
 public class Chamado {
     
     @Id

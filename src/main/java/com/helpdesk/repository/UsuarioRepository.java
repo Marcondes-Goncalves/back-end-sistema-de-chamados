@@ -14,8 +14,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     /**
      * Consulta a constraint que está impedindo a inserção do acesso padrão para o usuário recém-criado.
      * Por Algum motivo, o JPA não está conseguindo inserir o acesso padrão para o usuário recém-criado. 
-     * essa consulta retorna a constraint que está impedindo a inserção.
-     * @return
+     * essa consulta retorna a constraint que está impedindo a inserção para depois removê-la ou ajustá-la.
      */
     @Query(value = "SELECT constraint_name " +
                    "FROM information_schema.constraint_column_usage " +
@@ -26,7 +25,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     /**
      * Insere o acesso padrão (ROLE_CLIENTE) para o usuário recém-criado.
-     * @param idUsuario
      */
     @Transactional
     @Modifying
@@ -35,8 +33,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     /**
      * Insere um acesso específico para o usuário.
-     * @param idUsuario
-     * @param role
      */
     @Transactional
     @Modifying

@@ -9,7 +9,7 @@ import com.helpdesk.repository.AcessoRepository;
 @Service 
 public class AcessoService {
     
-    private AcessoRepository acessoRepository;
+    private final AcessoRepository acessoRepository;
 
     public AcessoService(AcessoRepository acessoRepository) {
         this.acessoRepository = acessoRepository;
