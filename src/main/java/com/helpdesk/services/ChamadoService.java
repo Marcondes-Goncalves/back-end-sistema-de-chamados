@@ -33,7 +33,10 @@ public class ChamadoService {
         chamado.setCliente(usuario);
         return chamadoRepository.save(chamado);
     }
-    
+
+    /*
+    * Retorna todos os chamados abertos para todos os técnicos, o end-point dessa função só retorna os dados para os técnicos e administradores
+    * */
     public Page<Chamado> chamadosAbertos(Pageable pageable) {
         
         Page<Chamado> chamados = chamadoRepository.chamados(
@@ -51,14 +54,25 @@ public class ChamadoService {
     }
     
     public Page<Chamado> chamadosAbertosUsuario(Long usuarioId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.ABERTO,
-            usuarioId,
-            null,
-            pageable
-        );
-        
+
+        Page<Chamado> chamados = null;
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ExceptionMsg("Usuário não encontrado com o ID: " + usuarioId));
+
+        if (usuario.getAcessos()
+                   .stream()
+                   .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                   .count() == 0) {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.ABERTO,
+                    usuarioId,
+                    null,
+                    pageable
+            );
+        }
+
         if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
             throw new ExceptionMsg("Não há chamados abertos para este usuário no momento.");
         }
@@ -82,22 +96,6 @@ public class ChamadoService {
 
         return "Chamado cancelado com sucesso.";
     }
-    
-    public Page<Chamado> chamadosCanceladosUsuario(Long usuarioId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.CANCELADO,
-            usuarioId,
-            null,
-            pageable
-        );
-        
-        if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
-            throw new ExceptionMsg("Não há chamados cancelados para este usuário no momento.");
-        }
-        
-        return chamados;
-    }
 
     // o técnico pode colocar o chamado em andamento, mas apenas se ele estiver em aberto
     public Chamado chamadoEmAndamento(Chamado chamado, Long idTecnico) {
@@ -115,33 +113,36 @@ public class ChamadoService {
         return chamadoRepository.save(chamado);
     }
     
-    public Page<Chamado> chamadosEmAndamentoUsuario(Long usuarioId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.ANDAMENTO,
-            usuarioId,
-            null,
-            pageable
-        );
+    public Page<Chamado> chamadosEmAndamento(Long usuarioId, Pageable pageable) {
+
+        Page<Chamado> chamados = null;
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ExceptionMsg("Usuário não encontrado com o ID: " + usuarioId));
+
+        if (usuario.getAcessos()
+                .stream()
+                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .count() == 0) {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.ANDAMENTO,
+                    usuarioId,
+                    null,
+                    pageable
+            );
+        }else {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.ANDAMENTO,
+                    null,
+                    usuarioId,
+                    pageable
+            );
+        }
         
         if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
             throw new ExceptionMsg("Não há chamados em andamento para este usuário no momento.");
-        }
-        
-        return chamados;
-    }
-    
-    public Page<Chamado> chamadosEmAndamentoTecnico(Long tecnicoId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.ANDAMENTO,
-            null,
-            tecnicoId,
-            pageable
-        );
-        
-        if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
-            throw new ExceptionMsg("Não há chamados em andamento para este técnico no momento.");
         }
         
         return chamados;
@@ -158,33 +159,36 @@ public class ChamadoService {
         return chamadoRepository.save(chamado);
     }
     
-    public Page<Chamado> chamadosResolvidosUsuario(Long usuarioId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.RESOLVIDO,
-            usuarioId,
-            null,
-            pageable
-        );
+    public Page<Chamado> chamadosResolvidos(Long usuarioId, Pageable pageable) {
+
+        Page<Chamado> chamados = null;
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ExceptionMsg("Usuário não encontrado com o ID: " + usuarioId));
+
+        if (usuario.getAcessos()
+                .stream()
+                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .count() == 0) {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.RESOLVIDO,
+                    usuarioId,
+                    null,
+                    pageable
+            );
+        }else {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.RESOLVIDO,
+                    null,
+                    usuarioId,
+                    pageable
+            );
+        }
         
         if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
             throw new ExceptionMsg("Não há chamados resolvidos para este usuário no momento.");
-        }
-        
-        return chamados;
-    }
-    
-    public Page<Chamado> chamadosResolvidosTecnico(Long tecnicoId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.RESOLVIDO,
-            null,
-            tecnicoId,
-            pageable
-        );
-        
-        if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
-            throw new ExceptionMsg("Não há chamados resolvidos para este técnico no momento.");
         }
         
         return chamados;
@@ -204,14 +208,33 @@ public class ChamadoService {
         return "Chamado fechado com sucesso.";
     }
     
-    public Page<Chamado> chamadosFechadosUsuario(Long usuarioId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.FECHADO,
-            usuarioId,
-            null,
-            pageable
-        );
+    public Page<Chamado> chamadosFechados(Long usuarioId, Pageable pageable) {
+
+        Page<Chamado> chamados = null;
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ExceptionMsg("Usuário não encontrado com o ID: " + usuarioId));
+
+        if (usuario.getAcessos()
+                .stream()
+                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .count() == 0) {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.FECHADO,
+                    usuarioId,
+                    null,
+                    pageable
+            );
+        }else {
+
+            chamados = chamadoRepository.chamados(
+                    StatusChamado.FECHADO,
+                    null,
+                    usuarioId,
+                    pageable
+            );
+        }
         
         if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
             throw new ExceptionMsg("Não há chamados fechados para este usuário no momento.");
@@ -219,22 +242,5 @@ public class ChamadoService {
         
         return chamados;
     }
-    
-    public Page<Chamado> chamadosFechadosTecnico(Long tecnicoId, Pageable pageable) {
-        
-        Page<Chamado> chamados = chamadoRepository.chamados(
-            StatusChamado.FECHADO,
-            null,
-            tecnicoId,
-            pageable
-        );
-        
-        if (chamados.isEmpty() || chamados.getTotalElements() == 0) {
-            throw new ExceptionMsg("Não há chamados fechados para este técnico no momento.");
-        }
-        
-        return chamados;
-    }
-    
-    
+
 }

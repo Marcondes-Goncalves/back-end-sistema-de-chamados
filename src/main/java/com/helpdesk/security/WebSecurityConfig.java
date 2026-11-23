@@ -56,10 +56,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/", "/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuarios/criar-conta").permitAll()
                 .requestMatchers(HttpMethod.GET, "/chamados/abertos").hasAnyRole("ADMIN", "TECNICO")
-                .requestMatchers(HttpMethod.GET, "/chamados/em-andamento").hasAnyRole("ADMIN", "TECNICO")
-                .requestMatchers(HttpMethod.GET, "/chamados/resolvidos").hasAnyRole("ADMIN", "TECNICO")
-                .requestMatchers(HttpMethod.GET, "/chamados/fechar").hasAnyRole("ADMIN", "CLIENTE")
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
               )
               
