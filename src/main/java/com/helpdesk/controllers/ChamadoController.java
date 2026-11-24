@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chamados")
-class ChamadoController {
+public class ChamadoController {
 
     private final ChamadoService chamadoService;
 

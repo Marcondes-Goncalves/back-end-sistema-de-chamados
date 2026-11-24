@@ -62,7 +62,7 @@ public class ChamadoService {
 
         if (usuario.getAcessos()
                    .stream()
-                   .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                   .filter(acesso -> acesso.getAcesso().equals("ROLE_TECNICO") || acesso.getAcesso().equals("ROLE_ADMIN"))
                    .count() == 0) {
 
             chamados = chamadoRepository.chamados(
@@ -122,7 +122,7 @@ public class ChamadoService {
 
         if (usuario.getAcessos()
                 .stream()
-                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .filter(acesso -> acesso.getAcesso().equals("ROLE_TECNICO") || acesso.getAcesso().equals("ROLE_ADMIN"))
                 .count() == 0) {
 
             chamados = chamadoRepository.chamados(
@@ -168,7 +168,7 @@ public class ChamadoService {
 
         if (usuario.getAcessos()
                 .stream()
-                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .filter(acesso -> acesso.getAcesso().equals("ROLE_TECNICO") || acesso.getAcesso().equals("ROLE_ADMIN"))
                 .count() == 0) {
 
             chamados = chamadoRepository.chamados(
@@ -217,7 +217,7 @@ public class ChamadoService {
 
         if (usuario.getAcessos()
                 .stream()
-                .filter(acesso -> acesso.getAcesso().equals("TECNICO") || acesso.getAcesso().equals("ADMIN"))
+                .filter(acesso -> acesso.getAcesso().equals("ROLE_TECNICO") || acesso.getAcesso().equals("ROLE_ADMIN"))
                 .count() == 0) {
 
             chamados = chamadoRepository.chamados(
